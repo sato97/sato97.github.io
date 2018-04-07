@@ -6,15 +6,19 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives | Hexo</title>
+  <title>keepalived + nginx 主备配置 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://yoursite.com/archives/index.html">
+  <meta name="description" content="keepalived + nginx 主备配置">
+<meta property="og:type" content="article">
+<meta property="og:title" content="keepalived + nginx 主备配置">
+<meta property="og:url" content="http://yoursite.com/2018/04/07/nginx+keepalived/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="keepalived + nginx 主备配置">
 <meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2018-04-07T15:47:11.312Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hexo">
+<meta name="twitter:title" content="keepalived + nginx 主备配置">
+<meta name="twitter:description" content="keepalived + nginx 主备配置">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -144,49 +148,114 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-nginx+keepalived" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2018" class="archive-year">2018</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/04/07/nginx+keepalived/" class="archive-article-date">
-  	<time datetime="2018-04-07T13:09:41.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-04-07</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/04/07/nginx+keepalived/">keepalived + nginx 主备配置</a>
+    <h1 class="article-title" itemprop="name">
+      keepalived + nginx 主备配置
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
+        
+        <a href="/2018/04/07/nginx+keepalived/" class="archive-article-date">
+  	<time datetime="2018-04-07T13:09:41.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-04-07</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p> keepalived + nginx 主备配置<br><a id="more"></a></p>
+<h3 id="1-检查必要的安装包是否已安装"><a href="#1-检查必要的安装包是否已安装" class="headerlink" title="1. 检查必要的安装包是否已安装"></a>1. 检查必要的安装包是否已安装</h3><p>ps -ef|grep XXX      查看进程是否启动<br>rpm -qa|grep XXX     查看是否已安装<br>rpm -qa | grep gcc    检查是否已安装g++、gcc，如果没安装yum install gcc-c++<br>rpm -qa pcre  检查pcre是否已安装<br>rpm -qa|grep zlib-devel 检查zlib-devel是否安装<br>gcc -v<br>g++ -v</p>
+<blockquote>
+<p>yum -y install gcc<br>yum -y install gcc-c++</p>
+</blockquote>
+<h3 id="2-安装nginx"><a href="#2-安装nginx" class="headerlink" title="2. 安装nginx"></a>2. 安装nginx</h3><p><a href="https://www.linuxidc.com/Linux/2016-08/134110.htm" target="_blank" rel="noopener">https://www.linuxidc.com/Linux/2016-08/134110.htm</a><br><a href="https://blog.csdn.net/chinajobs/article/details/45832895" target="_blank" rel="noopener">https://blog.csdn.net/chinajobs/article/details/45832895</a></p>
+<hr>
+<p>解压pcre-8.12.tar.gz<br> cd /usr/local/src/nginx<br> tar zxvf pcre-8.12.tar.gz<br>4）进入解压后的目录<br> cd pcre-8.12<br>5）配置<br>  ./configure<br>6) 编译<br>  make<br>7) 安装<br>  make install</p>
+<hr>
+<p>yum install zlib-devel</p>
+<p><a href="https://jingyan.baidu.com/article/d45ad148cfefe669542b8066.html" target="_blank" rel="noopener">https://jingyan.baidu.com/article/d45ad148cfefe669542b8066.html</a><br>tar -zxvf zlib-1.2.5.tar.gz<br>cd zlib-1.2.5<br>./configure<br>make<br>make install</p>
+<hr>
+<p>下载页面：<a href="http://www.openssl.org/source/" target="_blank" rel="noopener">http://www.openssl.org/source/</a><br>tar –zxvf openssl-1.0.0.tar.gz，<br>cd openssl-1.0.0，<br>./configure或./config<br>make<br>make install</p>
+<hr>
+<p>tar -xzvf nginx<br>cd nginx-1.1.12/<br> ./configure –prefix=/usr/local/webserver/nginx<br> –with-http_stub_status_module<br> –with-openssl=/usr/local/src/op<br> –with-http_ssl_module<br> –with-pcre=/usr/local/src/pcre-8.3<br>make<br>make install</p>
+<h3 id="3-nginx启停"><a href="#3-nginx启停" class="headerlink" title="3. nginx启停"></a>3. nginx启停</h3><p>/usr/local/nginx-1.7.8/sbin/nginx -s reload<br>/usr/local/nginx-1.7.8/sbin/nginx              #启动服务   不推荐：C:\server\nginx-1.0.2&gt;nginx.exe<br>/usr/local/nginx-1.7.8/sbin/nginx -s stop      #停止服务</p>
+<hr>
+<p>windows输入taskkill /fi “imagename eq nginx.EXE” /f，可以杀死名字为 nginx.EXE的所有进程<br>ip_hash的配置也很简单，直接加一行就可以了，这样只要是同一个ip过来的都会到同一台server上</p>
+<hr>
+<p> 想使用service nginx的方式启停，<br>cd /etc/init.d/<br>编写nginx文件<br>cd /etc/rc.d/init.d<br>chmod +x nginx<br>如果想随系统启动就执行    /sbin/chkconfig –level 345 nginx on</p>
+<p>service nginx start<br>service nginx stop</p>
+<h3 id="4-关防火墙"><a href="#4-关防火墙" class="headerlink" title="4. 关防火墙"></a>4. 关防火墙</h3><p>service iptables stop<br>vi /etc/sysconfig/iptables</p>
+<p>service iptables restart</p>
+<p>-A INPUT -p vrrp -j ACCEPT</p>
+<h3 id="5-安装keepalived并启停"><a href="#5-安装keepalived并启停" class="headerlink" title="5. 安装keepalived并启停"></a>5. 安装keepalived并启停</h3><p>!!! OpenSSL is not properly installed on your system. !!!<br>!!! Can not include OpenSSL headers files.<br>   yum -y install openssl-devel</p>
+<p><a href="https://blog.csdn.net/xyang81/article/details/52554398" target="_blank" rel="noopener">https://blog.csdn.net/xyang81/article/details/52554398</a><br>tar -zxvf keepalived-1.2.24.tar.gz<br>cd keepalived-1.2.24<br> ./configure –prefix=/usr/local/keepalived<br> make &amp;&amp; make install</p>
+<hr>
+<p> mkdir /etc/keepalived<br> cp /usr/local/keepalived/etc/keepalived/keepalived.conf /etc/keepalived/keepalived.conf<br> cp /usr/local/keepalived/etc/rc.d/init.d/keepalived /etc/rc.d/init.d/keepalived<br> cp /usr/local/keepalived/etc/sysconfig/keepalived /etc/sysconfig/keepalived<br> cp /usr/local/keepalived/sbin/keepalived /usr/sbin/</p>
+<blockquote>
+<p>chkconfig keepalived on<br>service keepalived start   #启动服务<br>service keepalived stop    #停止服务<br>service keepalived restart #重启服务</p>
+</blockquote>
+<h3 id="6-设置log"><a href="#6-设置log" class="headerlink" title="6. 设置log"></a>6. 设置log</h3><p><a href="https://www.cnblogs.com/zzzhfo/p/6070575.html" target="_blank" rel="noopener">https://www.cnblogs.com/zzzhfo/p/6070575.html</a><br>（1）<br>修改/etc/sysconfig/keepalived<br>把KEEPALIVED_OPTIONS=”-D” 修改为：KEEPALIVED_OPTIONS=”-D -d -S 0”<br>（2）<br> vim /etc/rsyslog.conf<br>添加一句<br>local0.*          /var/log/keepalived.log<br>（3） /etc/init.d/rsyslog restart<br>（4）/etc/init.d/keepalived restart<br>（5）tail -f /var/log/keepalived.log</p>
+<h3 id="7-设置chechk-nginx"><a href="#7-设置chechk-nginx" class="headerlink" title="7. 设置chechk nginx"></a>7. 设置chechk nginx</h3><p>放到  /etc/keepalived/chk_nginx.sh</p>
+<h3 id="8-nginx和keepalived可以更改的配置文件所在地方"><a href="#8-nginx和keepalived可以更改的配置文件所在地方" class="headerlink" title="8. nginx和keepalived可以更改的配置文件所在地方"></a>8. nginx和keepalived可以更改的配置文件所在地方</h3><p> nginx    /usr/local/nginx/conf/nginx.conf</p>
+<p> keepalived     /etc/keepalived</p>
+<h3 id="9-如果出现异常"><a href="#9-如果出现异常" class="headerlink" title="9. 如果出现异常"></a>9. 如果出现异常</h3><p>（1）Unable to set localhost. This prevents creation of a GUID. Cause was: demotwo: demotwo: 未知的名称或服务<br>vi /etc/hosts<br>添加  127.0.0.1   bogon（主机名，不是用户名） ，之后变成<br> 127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4<br>  127.0.0.1   bogon</p>
+<p>（2）linux   sh 权限不够<br>chmod +x *.sh再次执行 sh startup.sh成功启动<br>（3）java.lang.OutOfMemoryError: unable to create new native thread</p>
+<p>vim /etc/security/limits.d/90-nproc.conf<br> 打开后发现除了root，其他账户都限制在1024个。<br> 于是增加一条：ds     soft    nproc     20000      //不建议这么用，而是修改*，<br> 最终变成：</p>
+<ul>
+<li>soft   nproc   unlimited<br>root   soft   nproc   unlimited<br>重启<br>（4）find / -name “check_nginx<em>.</em>“</li>
+</ul>
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
-  
-  
-    </div></section>
+
   
 
-    
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+  
+  
+  
+
+  
+
+  
+
+  
 
 
           </div>
@@ -209,8 +278,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
